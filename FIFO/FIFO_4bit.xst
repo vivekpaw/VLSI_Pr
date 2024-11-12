@@ -1,5 +1,0 @@
-set -tmpdir "D:/BE Study matterial/VLSI codes/FIFO/xst/projnav.tmp"
-set -xsthdpdir "D:/BE Study matterial/VLSI codes/FIFO/xst"
-elaborate
--ifn FIFO_4bit.prj
--ifmt mixed
