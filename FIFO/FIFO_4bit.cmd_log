@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "G:/SUBJECTS/Course_Taught/VLSI_2019 Course/VHDL_codes_2024/FIFO/FIFO_4bit.xst" -ofn "G:/SUBJECTS/Course_Taught/VLSI_2019 Course/VHDL_codes_2024/FIFO/FIFO_4bit.syr" 

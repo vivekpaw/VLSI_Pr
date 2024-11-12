@@ -1,0 +1,5 @@
+set -tmpdir "D:/BE Study matterial/VLSI codes/ALU/xst/projnav.tmp"
+set -xsthdpdir "D:/BE Study matterial/VLSI codes/ALU/xst"
+elaborate
+-ifn ALU_4bit.prj
+-ifmt mixed

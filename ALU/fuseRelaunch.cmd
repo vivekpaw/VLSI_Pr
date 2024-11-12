@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -o "G:/SUBJECTS/Course_Taught/VLSI_2019 Course/VHDL_codes_2024/ALU/ALU_TB_isim_beh.exe" -prj "G:/SUBJECTS/Course_Taught/VLSI_2019 Course/VHDL_codes_2024/ALU/ALU_TB_beh.prj" "work.ALU_TB" 
