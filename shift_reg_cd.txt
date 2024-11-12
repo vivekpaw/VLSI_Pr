@@ -1,0 +1,150 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity shiftregister is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           s : in STD_LOGIC_VECTOR (3 downto 0);
+           sel : in STD_LOGIC_VECTOR (1 downto 0); -- mode
+           y : out STD_LOGIC_VECTOR (3 downto 0));
+end shiftregister;
+
+architecture Behavioral of shiftregister is
+signal t : std_logic_vector(3 downto 0);
+begin
+process(clk,reset)
+begin
+	if reset = '1' then
+	y <= "0000";
+  	elsif clk'event and clk = '1' then 	
+   case(sel) is
+		when "00" =>	-- SISO
+		  t(0) <= s(0);   -- LSB as input S(0)
+		  t(1) <= t(0);			  
+		  t(2) <= t(1);
+		  t(3) <= t(2);
+		  y(3) <= t(3);  -- LSB as output Y(0)--y(3)
+		when "01" =>	 -- SIPO
+		  t(0) <= s(0);	-- LSB as input S(0)
+		  t(1) <= t(0);			  
+		  t(2) <= t(1);
+		  t(3) <= t(2);
+		  y <= t ;	 	  -- 4 bit output Y
+							 --  LSB output  Y(0) <= S(0)	
+		when "10" =>	-- PIPO
+		  t <= s;	-- 4 bit input S
+		  y <= t;	-- 4 bit output Y
+		when "11" =>  	-- PISO
+		  t <= s;	 	-- 4 bit input S  &  t <= s				
+		  t(2) <= t(3);  --  MSB input as t(3) <= S(3)						  
+		  t(1) <= t(2);
+		  t(0) <= t(1);
+		  y(3) <= t(0);  -- MSB as output  Y(3) <= S(3)
+		when others => NULL ;
+	 end case;
+   end if;
+ end process;				
+end Behavioral;
+
+TEST BENCH
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity shiftregister_tb is
+end shiftregister_tb;
+
+architecture Behavioral of shiftregister_tb is
+
+COMPONENT shiftregister
+    PORT(
+         clk : IN  std_logic;
+         reset : IN  std_logic;
+         s : IN  std_logic_vector(3 downto 0);
+         sel : IN  std_logic_vector(1 downto 0);
+         y : OUT  std_logic_vector(3 downto 0)
+        );
+    END COMPONENT;
+    
+   --Inputs
+   signal clk : std_logic := '0';
+   signal reset : std_logic := '0';
+   signal s : std_logic_vector(3 downto 0) := (others => '0');
+   signal sel : std_logic_vector(1 downto 0) := (others => '0');
+
+ 	--Outputs
+   signal y : std_logic_vector(3 downto 0);
+
+   -- Clock period definitions
+   constant clk_period : time := 10 ns;
+ 
+ 
+BEGIN
+ 
+	-- Instantiate the Unit Under Test (UUT)
+   uut: shiftregister PORT MAP (
+          clk => clk,
+          reset => reset,
+          s => s,
+          sel => sel,
+          y => y
+        );
+
+
+   -- Clock process definitions
+   clk_process :process
+   begin
+		clk <= '0';
+		wait for clk_period/2;
+		clk <= '1';
+		wait for clk_period/2;
+   end process;
+
+   -- Stimulus process
+   stim_proc: process
+ begin		
+
+  wait for 10 ns;	
+	reset <= '1';
+      wait for 10 ns;	
+	reset <= '0';
+    wait for 20 ns;	
+		
+	 sel <= "00" ;				-- SISO	 
+		s <= "0001";			
+			wait for 80 ns;	
+	   s <= "111U";
+			wait for 80 ns;	
+		s <= "1110";
+			wait for 80 ns;						 
+	 
+	 
+	 sel <= "01" ;				-- SIPO	 
+		 s <= "0U0-";
+			wait for 80 ns;	
+	    s <= "U001";
+			wait for 80 ns;			
+		 s <= "-110";
+			wait for 80 ns;	
+				
+				
+	 sel <= "10" ;				-- PIPO	 
+		s <= "1010";
+			wait for 70 ns;	
+	   s <= "0U01";
+			wait for 70 ns;	
+		s <= "1-00";
+		   wait for 70 ns;
+	 	 
+		 
+	 sel <= "11" ;			-- PISO
+		s <= "U000";
+			wait for 80 ns;	
+	   s <= "1010";
+			wait for 80 ns;	
+		s <= "-111";
+			wait for 80 ns;
+			
+	 wait;
+   end process;
+end Behavioral;
